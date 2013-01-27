@@ -58,23 +58,25 @@ if not dry_run:
 
     page = dict(title = title, description = body)
 
-    try:
-        subprocess.call(['stty', '-echo'])
-        passwd = raw_input("Password for %s: " % (config['username'],))
-        print
-    finally:
-        subprocess.call(['stty', 'echo'])
+    # try:
+    #     subprocess.call(['stty', '-echo'])
+    #     passwd = raw_input("Password for %s: " % (config['username'],))
+    #     print
+    # finally:
+    #     subprocess.call(['stty', 'echo'])
+
+    passwd = config['password']
 
     x = xmlrpclib.ServerProxy(config['xmlrpc_endpoint'])
     x.metaWeblog.newPost(config['blog_id'], config['username'], passwd, page, True)
-email = render.render_template('templates/email.txt', date, punt=punt,mail=config['mail'])
+
+email = render.render_template('templates/email.txt', date, punt=punt, mail=config['mail'])
 if quick_view:
     print(render.render_template('templates/quick_view.tmpl',date,punt=punt))
 if dry_run and not quick_view:
     print email
 if not dry_run:
-    p = subprocess.Popen(['mutt', '-H', '/dev/stdin'],
-                         stdin=subprocess.PIPE)
+    p = subprocess.Popen(['mutt', '-H', '-'], stdin=subprocess.PIPE)
     p.communicate(email)
 
 if punt and not dry_run:
