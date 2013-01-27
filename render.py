@@ -36,10 +36,10 @@ def get_debts():
     debts = []
     for line in out.split("\n"):
         if not line: continue
-        (val, acct) = line.split()
+        (val, acct) = line.split(None, 1)
         user = acct[len("Pool:Owed:"):]
         val  = int(val[len("$"):])
-        debts.append((user, val))
+        debts.append((user.decode('utf-8'), val))
     return debts
 
 def to_week_num(date):
