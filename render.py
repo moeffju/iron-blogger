@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # This Python file uses the following encoding: utf-8
 import yaml
 from dateutil.parser import parse
