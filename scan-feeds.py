@@ -32,6 +32,7 @@ def get_date(post):
     for k in ('published', 'created', 'updated'):
         if k in post:
             return post[k]
+    raise ValueError
 
 def get_link(post):
     return post.link
@@ -43,26 +44,30 @@ def parse_feeds(weeks, uri):
 
     if not feed.entries:
         print >>sys.stderr, "WARN: no entries for ", uri
-    for post in feed.entries:
-        date = parse_published(get_date(post))
 
-        if date < START:
-            continue
-        wn = (date - START).days / 7
+    try:
+        for post in feed.entries:
+            date = parse_published(get_date(post))
 
-        while len(weeks) <= wn:
-            weeks.append([])
+            if date < START:
+                continue
+            wn = (date - START).days / 7
 
-        if post.has_key('title'):
-            post = dict(date=date,
-                        title=post.title,
-                        url=get_link(post))
-        if not post.has_key('title'):
-            post = dict(date=date,
-                        title="",
-                        url=get_link(post))
-        if post['url'] not in [p['url'] for p in weeks[wn]]:
-            weeks[wn].append(post)
+            while len(weeks) <= wn:
+                weeks.append([])
+
+            if post.has_key('title'):
+                post = dict(date=date,
+                            title=post.title,
+                            url=get_link(post))
+            if not post.has_key('title'):
+                post = dict(date=date,
+                            title="",
+                            url=get_link(post))
+            if post['url'] not in [p['url'] for p in weeks[wn]]:
+                weeks[wn].append(post)
+    except Exception as e:
+        print >>sys.stderr, "ERROR: Couldn't parse feed. Check http://feedvalidator.org/check.cgi?url=%s" % uri
 
 if len(sys.argv) > 1:
     for username in sys.argv[1:]:
