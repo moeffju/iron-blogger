@@ -26,8 +26,10 @@ def fetch_links(url):
         return None
 
 for (name, u) in users.items():
+    print >>sys.stderr, "%s" % name
     for e in u['links']:
         (title, url) = e[0:2]
+        print >>sys.stderr, "- %s" % url
         try:
     	    e[0] = e[0].strip()
     	except:
