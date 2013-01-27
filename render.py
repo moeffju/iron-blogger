@@ -17,6 +17,7 @@ START = datetime.datetime.strptime(config['start_date'],"%Y/%m/%d")
 HERE  = os.path.dirname(__file__)
 
 def get_balance(acct):
+    print >>sys.stderr, "calling: ledger -f %s -n balance %s" % (os.path.join(HERE,'ledger'), acct)
     p = subprocess.Popen(['ledger', '-f', os.path.join(HERE,'ledger'),
                           '-n', 'balance', acct],
                          stdout=subprocess.PIPE)
@@ -27,6 +28,7 @@ def get_balance(acct):
         return 0
 
 def get_debts():
+    print >>sys.stderr, "calling: ledger -f %s -n balance Pool:Owed:" % (os.path.join(HERE,'ledger'))
     p = subprocess.Popen(['ledger', '-f', os.path.join(HERE, 'ledger'),
                           '-n', 'balance', 'Pool:Owed:'],
                          stdout=subprocess.PIPE)
