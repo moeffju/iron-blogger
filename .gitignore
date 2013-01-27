@@ -2,3 +2,7 @@
 *.pyc
 settings.cfg
 out/
+lib/
+bin/
+.Python
+include/
