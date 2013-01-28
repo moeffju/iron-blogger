@@ -40,13 +40,13 @@ Originally by Nelson Elhage for MIT Iron Bloggers, adapted by Marcus "chaosblog"
   For each participant, add one entry like this:
   
     ```
-  twitter_nick:
-    links:
-    - ['Title of the first blog', 'http://example.org/blog']
-    - ['Second blog title', 'http://example.com/', 'http://example.com/author/mattness/rss']
-    name: 'Name of this blogger'
-    start: 2012/12/31
-    twitter: yes
+    twitter_nick:
+      links:
+      - ['Title of the first blog', 'http://example.org/blog']
+      - ['Second blog title', 'http://example.com/', 'http://example.com/author/mattness/rss']
+      name: 'Name of this blogger'
+      start: 2012/12/31
+      twitter: yes
     ```
 
   `twitter_nick` must either be the participants Twitter nickname, or if they don't have a Twitter account, something that would work as a Twitter nickname (i.e. no spaces, no dashes, no high-ascii characters, etc.). If someone doesn't have a Twitter account, also change `twitter: yes` to `twitter: no`.
