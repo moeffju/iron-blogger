@@ -18,7 +18,7 @@ Originally by Nelson Elhage for MIT Iron Bloggers, adapted by Marcus "chaosblog"
 
 3. Install the required dependencies:
 
-    `pip install lxml pyyaml feedparser dateutils mako xmlrpclib`
+    `pip install -r requirements.txt`
     
     You will also need to install `ledger` and `mutt`, preferably using your distro's package manager. For Debian, simply use `apt-get install ledger mutt`.
 
