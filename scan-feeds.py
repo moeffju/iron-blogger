@@ -38,14 +38,20 @@ def get_link(post):
     return post.link
 
 def parse_feeds(weeks, uri):
-    feed = feedparser.parse(uri)
-
     print >>sys.stderr, "Parsing: %s" % uri
 
+    feed = feedparser.parse(uri)
+
+    if feed['bozo']:
+        print >>sys.stderr, "WARN: BOZO, check <http://feedvalidator.org/check.cgi?url=%s>: %s" % (uri, feed['bozo_exception'])
+
     if not feed.entries:
-        print >>sys.stderr, "WARN: no entries for ", uri
+        print >>sys.stderr, "WARN: no entries for %s" % uri
 
     try:
+        if weeks is None:
+            weeks = []
+
         for post in feed.entries:
             date = parse_published(get_date(post))
 
@@ -66,8 +72,11 @@ def parse_feeds(weeks, uri):
                             url=get_link(post))
             if post['url'] not in [p['url'] for p in weeks[wn]]:
                 weeks[wn].append(post)
+
+            #print >>sys.stderr, "  %s (week %d) <%s>" % (post['date'], wn, post['url'])
     except Exception as e:
         print >>sys.stderr, "ERROR: Couldn't parse feed. Check http://feedvalidator.org/check.cgi?url=%s" % uri
+        print >>sys.stderr, str(e)
 
 if len(sys.argv) > 1:
     for username in sys.argv[1:]:
