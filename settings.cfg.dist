@@ -8,3 +8,4 @@ blog_id=0
 username=john_doe
 password=correcthorsebatterystaple
 participants_page_id=23
+publish=true
