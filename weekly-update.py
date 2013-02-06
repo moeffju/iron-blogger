@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# This Python file uses the following encoding: utf-8
+# encoding: utf-8
+
 import render
 import os
 import sys
@@ -9,7 +10,7 @@ import datetime
 import yaml
 import settings
 
-config=settings.load_settings()
+config = settings.load_settings()
 
 dry_run = False
 quick_view = False
@@ -31,8 +32,7 @@ with open('ledger', 'a') as f:
     f.write(render.render_template('templates/ledger', date))
 
 if not dry_run:
-    subprocess.check_call(["git", "commit", "ledger",
-                           "-m", "Update for %s" % (date,)])
+    subprocess.check_call(["git", "commit", "ledger", "-m", "Update for %s" % (date,)])
 
 debts = render.get_debts()
 punt = []
@@ -48,36 +48,8 @@ with open('ledger', 'a') as f:
   User:%(user)s
 """ % {'user': user, 'debt': debt, 'date': date})
 
-
-if not dry_run:
-    text = render.render_template('templates/week.tmpl', date, punt=punt)
-
-    lines = text.split("\n")
-    title = lines[0]
-    body  = "\n".join(lines[1:])
-
-    page = dict(title = title, description = body)
-
-    # try:
-    #     subprocess.call(['stty', '-echo'])
-    #     passwd = raw_input("Password for %s: " % (config['username'],))
-    #     print
-    # finally:
-    #     subprocess.call(['stty', 'echo'])
-
-    passwd = config['password']
-
-    x = xmlrpclib.ServerProxy(config['xmlrpc_endpoint'])
-    x.metaWeblog.newPost(config['blog_id'], config['username'], passwd, page, True)
-
-email = render.render_template('templates/email.txt', date, punt=punt, mail=config['mail'])
 if quick_view:
     print(render.render_template('templates/quick_view.tmpl',date,punt=punt))
-if dry_run and not quick_view:
-    print email
-if not dry_run:
-    p = subprocess.Popen(['mutt', '-H', '-'], stdin=subprocess.PIPE)
-    p.communicate(email)
 
 if punt and not dry_run:
     with open('bloggers.yml') as b:

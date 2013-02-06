@@ -39,7 +39,7 @@ def get_debts():
         (val, acct) = line.split(None, 1)
         user = acct[len("Pool:Owed:"):]
         val  = int(val[len("$"):])
-        debts.append((user.decode('utf-8'), val))
+        debts.append((user, val))
     return debts
 
 def to_week_num(date):

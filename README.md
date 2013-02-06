@@ -20,7 +20,8 @@ Originally by Nelson Elhage for MIT Iron Bloggers, adapted by Marcus "chaosblog"
 
     `pip install -r requirements.txt`
     
-    You will also need to install `ledger` and `mutt`, preferably using your distro's package manager. For Debian, simply use `apt-get install ledger mutt`.
+    You will also need to install `ledger` (version 2.x) and `mutt`, preferably using your distro's package manager. For Debian, simply use `apt-get install ledger mutt`.
+    You can find build ledger from [the source tarball on GitHub](https://github.com/downloads/ledger/ledger/ledger-2.6.3.tar.gz).
 
 ## Configuration
 
@@ -63,9 +64,14 @@ Originally by Nelson Elhage for MIT Iron Bloggers, adapted by Marcus "chaosblog"
 
 4. Create the working git branch
 
-  All data is kept in a `ledger` file in a `ledger` git branch, so create one:
+  All data is kept in a `ledger` file in git, so make sure your script has a git repo to use:
   
-  `git branch ledger`
+  `git init`
+
+  And create an empty `ledger` that is tracked by git:
+
+  `touch ledger`  
+  `git add ledger`
 
 ## Test run
 
@@ -78,18 +84,24 @@ Now get some test output: Run `./weekly-update.py -n YYYY-MM-DD`, replacing YYYY
 Once everything is configured, the periodical run looks like this:
 
 ```
-./update-participants.py
 ./scan-feeds.py
 ./weekly-update.py 2013-01-07
+./weekly-email.py 2013-01-07
+./weekly-blogpost.py 2013-01-07
+./update-participants.py
 ```
 
-You can automate this in a shell script that you run from cron. To calculate the correct date to give to `weekly-update.py`, you can use `date`. If you don't know how, you should be running the script manually, or maybe not at all.
+You can automate this in a shell script that you run from cron. To calculate the correct date to give to `weekly-*.py`, you can use `date`. If you don't know how, you should be running the script manually, or maybe not at all.
 
 ## Adding and removing bloggers
 
 To add new bloggers, just add them to `bloggers.yml` with the correct `start` date and run `./import-feeds.py`.
 
 To remove bloggers, either add an `end: YYYY/MM/DD` key to their entry in `bloggers.yml`, or just delete their entry.
+
+To change someone's twitter nickname, change the key in `bloggers.yml`, their entries in the `legder` file, and the key in the `out/report.xml` file.
+
+If a blog URL changes, change it in `bloggers.yml` and run `./scan-feeds.py USERNAME`.
 
 ## Skipping weeks
 
