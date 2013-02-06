@@ -2,11 +2,11 @@ Results for week beginning ${week_start.strftime("%F")}
 <h2>Who posted:</h2>
 <dl>
 % for u in sorted(good, key=lambda u:u.username):
-<dt><span class="user"><strong>${u.name} </strong> \
+<dt><span class="user"><strong>${u.name}</strong> \
   % if u.twitter != False:
-    <a href="https://twitter.com/#!/${u.username}">@${u.username}</a> \
+    <a href="https://twitter.com/${u.username}">@${u.username}</a> \
   % endif
-  :</span></dt>
+  </span></dt>
 <dd>
   <ul>
  % for p in u.weeks[week]:
@@ -22,7 +22,7 @@ Results for week beginning ${week_start.strftime("%F")}
 % for u in sorted(lame, key=lambda u:u.username):
 <li class="user"><strong>${u.name} </strong> \
   % if u.twitter != False:
-    <a href="https://twitter.com/#!/${u.username}">@${u.username}</a> \
+    <a href="https://twitter.com/${u.username}">@${u.username}</a> \
   % endif
 </li>
 % endfor
@@ -43,7 +43,7 @@ Results for week beginning ${week_start.strftime("%F")}
 % for u in sorted(skip, key=lambda u:u.username):
   <li class="user"><strong>${u.name} </strong> \
   % if u.twitter != False:
-   - <a href="https://twitter.com/#!/${u.username}">@${u.username}</a> \
+   - <a href="https://twitter.com/${u.username}">@${u.username}</a> \
   % endif
   </li>
 % endfor
@@ -56,7 +56,7 @@ Results for week beginning ${week_start.strftime("%F")}
 % for u in sorted(skipped_users, key=lambda u:u.username):
   <li class="user"><strong>${u.name} </strong> \
   % if u.twitter != False:
-   - <a href="https://twitter.com/#!/${u.username}">@${u.username}</a> \
+   - <a href="https://twitter.com/${u.username}">@${u.username}</a> \
   % endif
   </li>
 % endfor
