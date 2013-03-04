@@ -62,7 +62,7 @@ Originally by Nelson Elhage for MIT Iron Bloggers, adapted by Marcus "chaosblog"
 
   Run `./import-feeds.py` to try and automatically find missing feed URLs.
 
-4. Create the working git branch
+4. Create the ledger file
 
   All data is kept in a `ledger` file in git, so make sure your script has a git repo to use:
   
@@ -81,17 +81,20 @@ Now get some test output: Run `./weekly-update.py -n YYYY-MM-DD`, replacing YYYY
 
 ## Normal periodical run
 
-Once everything is configured, the periodical run looks like this:
+Every day, as often as you want, run:
 
 ```
-./scan-feeds.py
-./weekly-update.py 2013-01-07
-./weekly-email.py 2013-01-07
-./weekly-blogpost.py 2013-01-07
-./update-participants.py
+./daily.sh
 ```
 
-You can automate this in a shell script that you run from cron. To calculate the correct date to give to `weekly-*.py`, you can use `date`. If you don't know how, you should be running the script manually, or maybe not at all.
+Every monday at or after midnight, run:
+
+```
+./daily.sh
+./weekly.sh
+```
+
+By default, `weekly.sh` will ask for confirmation before running. If you want to run the scripts automatically from cron, you can add a parameter `--trust-me` to the invocation of `weekly.sh`.
 
 ## Adding and removing bloggers
 
