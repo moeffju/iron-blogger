@@ -57,6 +57,7 @@ if punt and not dry_run:
     for p in punt:
         if 'end' not in bloggers[p]:
             bloggers[p]['end'] = date
+            bloggers[p]['punt'] = True
     with open('bloggers.yml','w') as b:
         yaml.safe_dump(bloggers, b)
 

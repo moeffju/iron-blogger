@@ -97,6 +97,7 @@ def render_template(path, week=None, **kwargs):
         u.start_de = datetime.datetime.strptime(rec['start'],"%Y/%m/%d").strftime("%d.%m.%Y")
         u.start = rec['start']
         u.end   = rec.get('end')
+        u.punt  = rec.get('punt')
         u.stop  = rec.get('stop')
         u.skip  = parse_skip(rec)
         u.weeks = report.get(un, [])
@@ -104,7 +105,7 @@ def render_template(path, week=None, **kwargs):
         userlist.append(u)
 
         # create a subset of punted users
-        if u.end:
+        if u.punt:
             punted.append(u)
 
     def user_key(u):
