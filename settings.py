@@ -18,4 +18,9 @@ def load_settings():
     config['participants_page_id'] = configfile.get("blogsettings", "participants_page_id")
     config['publish'] = True if configfile.get('blogsettings', 'publish') == "true" else False
 
+    config['consumer_key'] = configfile.get('twitter', 'consumer_key')
+    config['consumer_secret'] = configfile.get('twitter', 'consumer_secret')
+    config['access_token'] = configfile.get('twitter', 'access_token')
+    config['access_token_secret'] = configfile.get('twitter', 'access_token_secret')
+
     return config
