@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # This Python file uses the following encoding: utf-8
+
 import yaml
 from dateutil.parser import parse
 import datetime
@@ -11,39 +12,39 @@ import subprocess
 import settings
 from mako.template import Template
 
-config=settings.load_settings()
 
-START = datetime.datetime.strptime(config['start_date'],"%Y/%m/%d")
-HERE  = os.path.dirname(__file__)
+config = settings.load_settings()
+
+START = datetime.datetime.strptime(config['start_date'], "%Y/%m/%d")
+HERE = os.path.dirname(__file__)
+
 
 def get_balance(acct):
-    print >>sys.stderr, "calling: ledger -f %s -n balance %s" % (os.path.join(HERE,'ledger'), acct)
-    p = subprocess.Popen(['ledger', '-f', os.path.join(HERE,'ledger'),
-                          '-n', 'balance', acct],
-                         stdout=subprocess.PIPE)
+    p = subprocess.Popen(['ledger', '-f', os.path.join(HERE, 'ledger'), '-n', 'balance', acct], stdout=subprocess.PIPE)
     (out, _) = p.communicate()
     try:
         return int(out.split()[0][1:])
     except:
         return 0
 
+
 def get_debts():
-    print >>sys.stderr, "calling: ledger -f %s -n balance Pool:Owed:" % (os.path.join(HERE,'ledger'))
-    p = subprocess.Popen(['ledger', '-f', os.path.join(HERE, 'ledger'),
-                          '-n', 'balance', 'Pool:Owed:'],
-                         stdout=subprocess.PIPE)
+    p = subprocess.Popen(['ledger', '-f', os.path.join(HERE, 'ledger'), '-n', 'balance', 'Pool:Owed:'], stdout=subprocess.PIPE)
     (out, _) = p.communicate()
     debts = []
     for line in out.split("\n"):
-        if not line: continue
+        if not line:
+            continue
         (val, acct) = line.split(None, 1)
         user = acct[len("Pool:Owed:"):]
-        val  = int(val[len("$"):])
+        val = int(val[len("$"):])
         debts.append((user, val))
     return debts
 
+
 def to_week_num(date):
     return (parse(date, default=START) - START).days / 7
+
 
 def parse_skip(rec):
     spec = rec.get('skip', [])
@@ -55,6 +56,7 @@ def parse_skip(rec):
             out.append(to_week_num(s))
     return out
 
+
 def should_skip(skips, week):
     for e in skips:
         if e == week:
@@ -62,6 +64,7 @@ def should_skip(skips, week):
         if isinstance(e, list) and e[0] <= week and e[1] > week:
             return True
     return False
+
 
 def render_template(path, week=None, **kwargs):
     with open('out/report.yml') as r:
@@ -76,7 +79,7 @@ def render_template(path, week=None, **kwargs):
 
     week = (week - START).days / 7
     week_start = START + (week * datetime.timedelta(7))
-    week_end   = START + ((week + 1) * datetime.timedelta(7))
+    week_end = START + ((week + 1) * datetime.timedelta(7))
 
     good = []
     lame = []
@@ -91,15 +94,15 @@ def render_template(path, week=None, **kwargs):
     for (un, rec) in users.items():
         u = User()
         u.username = un
-        u.name  = rec['name']
+        u.name = rec['name']
         u.links = rec['links']
         u.twitter = rec.get('twitter')
-        u.start_de = datetime.datetime.strptime(rec['start'],"%Y/%m/%d").strftime("%d.%m.%Y")
+        u.start_de = datetime.datetime.strptime(rec['start'], "%Y/%m/%d").strftime("%d.%m.%Y")
         u.start = rec['start']
-        u.end   = rec.get('end')
-        u.punt  = rec.get('punt')
-        u.stop  = rec.get('stop')
-        u.skip  = parse_skip(rec)
+        u.end = rec.get('end')
+        u.punt = rec.get('punt')
+        u.stop = rec.get('stop')
+        u.skip = parse_skip(rec)
         u.weeks = report.get(un, [])
 
         userlist.append(u)
@@ -133,9 +136,9 @@ def render_template(path, week=None, **kwargs):
     debts = get_debts()
 
     return Template(filename=path, output_encoding='utf-8').render(
-        week=week, week_start=week_start,week_end=week_end,
+        week=week, week_start=week_start, week_end=week_end,
         good=good, lame=lame, skip=skip, skipped_users=skipped_users, userlist=userlist,
-        pool=(get_balance('Pool')-get_balance('Event')), paid=get_balance('Pool:Paid'),
+        pool=(get_balance('Pool') - get_balance('Event')), paid=get_balance('Pool:Paid'),
         event=get_balance('Pool:Event'),
         debts=debts, punted=punted, **kwargs)
 
@@ -146,5 +149,6 @@ if __name__ == '__main__':
 
     template = sys.argv[1]
     week = None
-    if len(sys.argv) > 2: week = sys.argv[2]
+    if len(sys.argv) > 2:
+        week = sys.argv[2]
     print render_template(template, week)
