@@ -6,7 +6,7 @@
           <th>Start Week</th>
           <th>Skipped Weeks</th>
         </tr>
-% for u in sorted(userlist, key=lambda u:u.username):
+% for u in [u for u in sorted(userlist, key=lambda u:u.username) if not u.end]:
         <tr>
           <td align="left" valign="top">${u.name}</td>
           <td align="left" valign="top">
@@ -25,7 +25,7 @@
           </td>
           <td align="left" valign="top"> ${u.start_de} </td>
           <td align="left" valign="top">
-          % if u.end:
+          % if u.punt:
             Punted<br>
           % endif
           % if u.skip:
